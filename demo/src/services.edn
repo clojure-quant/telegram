@@ -1,0 +1,23 @@
+{:modular (modular.system/modular-env)  ; {:profile "jetty"  :config ["demo.edn" "secrets.edn"]}
+ ;:secrets #include "secrets.edn" ;; externalised and usually "mounted" as a docker/kubernetes secret
+ :components
+ {:config {:start (modular.config/load-config! (:config #ref [:modular]))}
+  ;:web {:start (telegram.webserver/run-webserver nil)}
+  :telegram {:start (telegram.service/telegram-bot-start 
+                     (:telegram (deref (clip/ref :config)))
+                     {:commands [; md/html/foto from file/url
+                                 {:command "wink" :description "html format demo" :rpc-fn demo/wink }
+                                 {:command "md1" :description "markdown1" :rpc-fn demo/md1}
+                                 {:command "moon" :description "moon photo" :rpc-fn demo/moon}
+                                 ; generated table
+                                 {:command "table1" :description "table via md BAD" :rpc-fn demo/table1}
+                                 {:command "table2" :description "table via html" :rpc-fn demo/table2}
+                                 {:command "table3" :description "table big via html" :rpc-fn demo/table3}
+                                 ;
+                                 {:command "time" :description "set time" :rpc-fn demo/time}
+                                 {:command "app" :description "web app" :rpc-fn demo/app}
+                                 {:command "dialog1" :description "full keyboard" :rpc-fn demo/dialog1}
+                                 ]})}
+  :demo {:start (demo/telegram-demo (clip/ref :telegram))}
+  }}
+  
