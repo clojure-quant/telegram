@@ -2,20 +2,15 @@
   (:require
    [clojure.pprint :refer [print-table]]
    [telegrambot-lib.core :as tbot]
-   [telegram.command :as cmd]))
+   [telegram.command :as cmd]
+   [telegram.pubsub :refer [publish]]))
 
-(defn telegram-demo [bot]
-  (println "demo starting..")
-  (let [r1 (tbot/get-me bot)
-        r5 (tbot/get-my-commands bot)]
-    (println "get-me: " r1)
-    (println "get-my-commands result: " r5)))
+;; RPC COMMANDS
 
-
-(defn md1 [text]
+(defn md1 [_]
   {:md (slurp "asset/demo.md")})
 
-(defn wink [text]
+(defn wink [_]
   {:html (slurp "asset/demo.html")})
 
 (def data [{:age 15 :name "Willy" :likes "Banana"}
@@ -25,10 +20,10 @@
 
 
 
-(defn table1 [text]
+(defn table1 [_]
   {:md (with-out-str (print-table data))})
 
-(defn table2 [text]
+(defn table2 [_]
   {:html (str  "<code>"
                (with-out-str (print-table data))
                "</code>")})
@@ -40,14 +35,14 @@
 
 
 
-(defn table3 [text]
+(defn table3 [_]
   {:html (str  "<code>"
                (with-out-str (print-table data3))
                "</code>")})
 
 
-(defn time [text]
-  {:text (str "time 08:08:08 text:" text)
+(defn time [_]
+  {:text (str "time 08:08:08")
    :keyboard  [[{:text "UTC" :callback_data "btn_utc"}
                 {:text "EST" :callback_data "btn_est"}]
                [{:text "winter" :callback_data "btn_winter"}
@@ -63,15 +58,15 @@
                 {:text "9" :callback_data "btn_9"}]]})
 
 
-(defn app [text]
+(defn app [_]
   {:text "Test web_app"
    :web {:url "https://revenkroz.github.io/telegram-web-app-bot-example/index.html"}
    :keyboard  [[{:text "app"  :web_app {:url "https://revenkroz.github.io/telegram-web-app-bot-example/index.html"}}]]})
 
 
 
-(defn dialog1 [text]
-  {:text (str "set options" text)
+(defn dialog1 [_]
+  {:text ""
    :reply-keyboard  [[{:text "UTC" :callback_data "btn_utc"}
                       {:text "EST" :callback_data "btn_est"}]
                      [{:text "1" :callback_data "btn_1"}
@@ -84,5 +79,29 @@
                       {:text "8" :callback_data "btn_8"}
                       {:text "9" :callback_data "btn_9"}]]})
 
-(defn moon [text]
+(defn moon [_]
   {:photo "https://www.virtualtelescope.eu/wordpress/wp-content/uploads/2014/03/moon_16mar2014_stretched.jpg"})
+
+;; DEMO SERVICE
+
+(defn telegram-demo [{:keys [bot state]}]
+  (println "demo starting..")
+  (let [r1 (tbot/get-me bot)
+        r5 (tbot/get-my-commands bot)]
+    (println "get-me: " r1)
+    (println "get-my-commands result: " r5)))
+
+;; DATA PUBLISHER
+
+(defn random-data []
+  {:html (str "topic: default, random data: " (rand-int 100))})
+
+(defn start-data-pusher [{:keys [bot state]}]
+  (loop []
+    (let [topic "default"
+          msg (random-data)]
+      (println "publishing topic: default data: " msg)
+      (publish bot state topic msg)
+      (Thread/sleep 15000)
+      (recur))))
+

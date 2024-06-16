@@ -17,7 +17,11 @@
                                  {:command "time" :description "set time" :rpc-fn demo/time}
                                  {:command "app" :description "web app" :rpc-fn demo/app}
                                  {:command "dialog1" :description "full keyboard" :rpc-fn demo/dialog1}
+                                 ; publish & subscribe
+                                 {:command "subscribe" :description "subscribe default" :rpc-fn telegram.pubsub/subscribe-default}
+                                 {:command "unsubscribe" :description "unsubscribe default" :rpc-fn telegram.pubsub/unsubscribe-default}
                                  ]})}
   :demo {:start (demo/telegram-demo (clip/ref :telegram))}
+  :data-publisher {:start (demo/start-data-pusher (clip/ref :telegram))}
   }}
   

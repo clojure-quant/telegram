@@ -41,22 +41,15 @@
         (Thread/sleep 500)
         (recur)))))
 
-
-(defn set-commands [b commands]
-  (let [commands (map #(dissoc % :rpc-fn) commands)
-        {:keys [ok result error_code description] :as r} (tbot/set-my-commands b {:commands commands})]
-    (if ok
-      (println "set-commands success! ")  
-      (println "set-commands error: " error_code ": " description))
-    ))
-
-
 (defn telegram-bot-start [{:keys [token name _hook]} {:keys [commands] :as opts}]
   (println "telegram bot name: " name " starting ..")
   (let [bot (tbot/create token)
-        state (atom {})]
+        state (atom {:command nil
+                     :subscriptions {}})]
     (start-polling bot state opts)
-    (set-commands bot commands)
-    bot))
+    (cmd/set-commands bot commands)
+    {:bot bot 
+     :state state
+     :commands commands}))
 
 

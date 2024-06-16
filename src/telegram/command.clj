@@ -11,6 +11,12 @@
 ; /set_timer 10min Alarm!
 ; /get_timezone London, UK
 
+(defn set-commands [b commands]
+  (let [commands (map #(dissoc % :rpc-fn) commands)
+        {:keys [ok result error_code description] :as r} (tbot/set-my-commands b {:commands commands})]
+    (if ok
+      (println "set-commands success! ")
+      (println "set-commands error: " error_code ": " description))))
 
 (defn msg-command? [{:keys [text entities] :as msg}]
   (let [entity-type (-> entities first :type)]
@@ -35,7 +41,7 @@
          :or {rpc-fn unknown-cmd}}
         (or (->> (filter (cmd= c) commands) first)
             {:rpc-fn unknown-cmd})
-        reply-msg (rpc-fn c)
+        reply-msg (rpc-fn {:bot bot :commands commands :state state :msg msg :cmd c})
         {:keys [ok error_code description]} (send-message bot (:id chat) reply-msg)]
     (when-not ok
       (println "command [" command "] send error code: " error_code " description: " description " reply: \r\n" reply-msg))))
