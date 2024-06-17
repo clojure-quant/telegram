@@ -2,3 +2,5 @@
 .cpcache
 config.edn
 .webly
+.nrepl-port
+.calva

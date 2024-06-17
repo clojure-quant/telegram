@@ -1,5 +1,6 @@
 (ns demo
   (:require
+   [clojure.string :as str]
    [clojure.pprint :refer [print-table]]
    [telegrambot-lib.core :as tbot]
    [telegram.pubsub :refer [publish]]))
@@ -18,9 +19,21 @@
            {:age 0 :name "TelegramBotLib" :likes "Bowling"}])
 
 
+(defn sanitize [s]
+  (-> s
+      (str/replace "|" "\\|")
+      (str/replace "-" "\\-")
+      (str/replace "+" "\\+")
+      ))
+
+
+(defn table [data]
+  (-> (with-out-str (print-table data))
+      (sanitize)
+      ))
 
 (defn table1 [_]
-  {:md (with-out-str (print-table data))})
+  {:md (table data)})
 
 (defn table2 [_]
   {:html (str  "<code>"
@@ -97,11 +110,12 @@
   {:html (str "topic: default, random data: " (rand-int 100))})
 
 (defn start-data-pusher [this]
-  (loop []
-    (let [topic "marketdata"
-          msg (random-data)]
-      (println "publishing topic: marketdata data: " msg)
-      (publish this topic msg)
-      (Thread/sleep (* 5 60 1000)) ; 5 min
-      (recur))))
+  (future
+    (loop []
+      (let [topic "marketdata"
+            msg (random-data)]
+        (println "publishing topic: marketdata data: " msg)
+        (publish this topic msg)
+        (Thread/sleep (* 5 60 1000)) ; 5 min
+        (recur)))))
 

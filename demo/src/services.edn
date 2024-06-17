@@ -2,10 +2,10 @@
  :components
  {:config {:start (modular.config/load-config! (:config #ref [:modular]))}
   ;:web {:start (telegram.webserver/run-webserver nil)}
-  :telegram {:start (telegram.service/telegram-bot-start 
+  :telegram {:start (telegram.service/telegram-bot-start
                      (:telegram (deref (clip/ref :config)))
                      {:commands [; md/html/foto from file/url
-                                 {:command "wink" :description "html format demo" :rpc-fn demo/wink }
+                                 {:command "wink" :description "html format demo" :rpc-fn demo/wink}
                                  {:command "md1" :description "markdown1" :rpc-fn demo/md1}
                                  {:command "moon" :description "moon photo" :rpc-fn demo/moon}
                                  ; generated table
@@ -13,8 +13,8 @@
                                  {:command "table2" :description "table via html" :rpc-fn demo/table2}
                                  {:command "table3" :description "table big via html" :rpc-fn demo/table3}
                                  ;
-                                 {:command "timezone" :description "set time" 
-                                  :rpc-fn demo/timezone 
+                                 {:command "timezone" :description "set time"
+                                  :rpc-fn demo/timezone
                                   :opts [{:title "timezone" :options ["UTC" "EST" "Panama"]}]}
                                  {:command "app" :description "web app" :rpc-fn demo/app}
 
@@ -24,13 +24,11 @@
                                  {:command "subscribe" :description "subscribe topic"
                                   :rpc-fn telegram.pubsub/subscribe
                                   :opts [{:title "topic" :options ["marketdata" "entries" "exits"]}]}
-                                 {:command "unsubscribe" :description "unsubscribe topic" 
+                                 {:command "unsubscribe" :description "unsubscribe topic"
                                   :rpc-fn telegram.pubsub/unsubscribe
                                   :opts [{:title "topic" :options ["marketdata" "entries" "exits"]}]}
-                                 {:command "subscriptions" :description "current subscriptions" 
-                                  :rpc-fn telegram.pubsub/my-subscriptions}
-                                 
-                                 ]})}
+                                 {:command "subscriptions" :description "current subscriptions"
+                                  :rpc-fn telegram.pubsub/my-subscriptions}]})}
   :demo {:start (demo/telegram-demo (clip/ref :telegram))}
   :data-publisher {:start (demo/start-data-pusher (clip/ref :telegram))}
   :nrepl {:start (nrepl.server/start-server
@@ -38,6 +36,5 @@
                   :port 9100
                   :middleware cider.nrepl.middleware/cider-middleware
                   :handler cider.nrepl/cider-nrepl-handler)
-          :stop (.close this)}
-  }}
+          :stop (.close this)}}}
   
