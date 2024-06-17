@@ -1,0 +1,2 @@
+{:telegram {:name "your-bot"
+            :token "your-token"}}
