@@ -13,24 +13,22 @@
 (defn wink [_]
   {:html (slurp "asset/demo.html")})
 
-(def data [{:age 15 :name "Willy" :likes "Banana"}
-           {:age 18 :name "Anna" :likes "Beach"}
-           {:age 88 :name "Abuela" :likes "Brownies"}
-           {:age 0 :name "TelegramBotLib" :likes "Bowling"}])
+(def data [{:age 15 :name "Willy"}
+           {:age 18 :name "Anna"}
+           {:age 88 :name "Abuela"}
+           {:age 0 :name "TelegramBotLib"}])
 
 
 (defn sanitize [s]
   (-> s
       (str/replace "|" "\\|")
       (str/replace "-" "\\-")
-      (str/replace "+" "\\+")
-      ))
+      (str/replace "+" "\\+")))
 
 
 (defn table [data]
   (-> (with-out-str (print-table data))
-      (sanitize)
-      ))
+      (sanitize)))
 
 (defn table1 [_]
   {:md (table data)})

@@ -46,22 +46,6 @@
     (println "publishing topic: " topic " to: " (count chats) " subscribers .. " " chat-ids: " chats)
     (doall (map #(send-message bot % msg) chats))))
 
-
-;; TOPIC: DEFAULT subscribe/unsubscribe
-
-(defn get-chat-id [msg]
-  (get-in msg [:chat :id]))
-
-(defn subscribe-default [this]
-  (let [topic "default"
-        msg (subscribe this topic)]
-    msg))
-
-(defn unsubscribe-default [this]
-  (let [topic "default"
-        msg (unsubscribe this topic)]
-    msg))
-
 (defn my-subscriptions [this]
   (println "my-subs..")
   (let [topics (subscriptions this)
