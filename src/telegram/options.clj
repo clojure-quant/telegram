@@ -48,17 +48,23 @@
     (create-dialog title options)))
 
 
+(defn unknown-reply [this data]
+  (let [text (msg/msg-text data)]
+    {:html (str "unknown command: " text)}))
+
 (defn create-reply-message [{:keys [bot state commands] :as this} {:keys [message] :as data}]
   (let [c1 (cmd/msg-command? message)]
-    (when c1  (db/set-command! this c1))
+    (when c1  (db/set-command! this c1 data))
     (let [{:keys [command args opts]} (db/get-command-state this)]
-      (println "++ reply cmd: " command "args: " args)
-      (when (and (not c1) (not (has-all-args? opts args)))
-        (read-current-arg this data))
-      (let [{:keys [args opts]} (db/get-command-state this)]
-        (if (has-all-args? opts args)
-          (exec-command this)
-          (get-next-arg-message this))))))
+      (println "++ reply cmd: " command "args: " args "command: " command)
+      (if command
+        (do (when (and (not c1) (not (has-all-args? opts args)))
+              (read-current-arg this data))
+            (let [{:keys [args opts]} (db/get-command-state this)]
+              (if (has-all-args? opts args)
+                (exec-command this)
+                (get-next-arg-message this))))
+        (unknown-reply this data)))))
 
 (defn process-message [{:keys [bot state commands] :as this} data]
   (println "RCVD: " data)

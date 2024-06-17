@@ -2,5 +2,4 @@
          "resources"]
  :deps {org.clojure/clojure    {:mvn/version "1.11.1"}
         telegrambot-lib/telegrambot-lib {:mvn/version "2.15.0"}
-        com.cemerick/url {:mvn/version "0.1.1"} 
-        }}
+        com.cemerick/url {:mvn/version "0.1.1"}}}

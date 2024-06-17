@@ -13,16 +13,31 @@
                                  {:command "table2" :description "table via html" :rpc-fn demo/table2}
                                  {:command "table3" :description "table big via html" :rpc-fn demo/table3}
                                  ;
-                                 {:command "time" :description "set time" :rpc-fn demo/time :opts [{:title "timezone" :options ["UTC" "EST" "Panama"]}]}
+                                 {:command "timezone" :description "set time" 
+                                  :rpc-fn demo/timezone 
+                                  :opts [{:title "timezone" :options ["UTC" "EST" "Panama"]}]}
                                  {:command "app" :description "web app" :rpc-fn demo/app}
+
                                  {:command "dialog1" :description "full keyboard" :rpc-fn demo/dialog1}
+                                 {:command "dialog2" :description "inline keyboard" :rpc-fn demo/dialog2}
                                  ; publish & subscribe
-                                 {:command "subscribe" :description "subscribe default" :rpc-fn telegram.pubsub/subscribe-default}
-                                 {:command "unsubscribe" :description "unsubscribe default" :rpc-fn telegram.pubsub/unsubscribe-default}
-                                 {:command "subscriptions" :description "current subscriptions" :rpc-fn telegram.pubsub/my-subscriptions}
+                                 {:command "subscribe" :description "subscribe topic"
+                                  :rpc-fn telegram.pubsub/subscribe
+                                  :opts [{:title "topic" :options ["marketdata" "entries" "exits"]}]}
+                                 {:command "unsubscribe" :description "unsubscribe topic" 
+                                  :rpc-fn telegram.pubsub/unsubscribe
+                                  :opts [{:title "topic" :options ["marketdata" "entries" "exits"]}]}
+                                 {:command "subscriptions" :description "current subscriptions" 
+                                  :rpc-fn telegram.pubsub/my-subscriptions}
                                  
                                  ]})}
   :demo {:start (demo/telegram-demo (clip/ref :telegram))}
   :data-publisher {:start (demo/start-data-pusher (clip/ref :telegram))}
+  :nrepl {:start (nrepl.server/start-server
+                  :bind "0.0.0.0"
+                  :port 9100
+                  :middleware cider.nrepl.middleware/cider-middleware
+                  :handler cider.nrepl/cider-nrepl-handler)
+          :stop (.close this)}
   }}
   

@@ -31,6 +31,5 @@
       (subs text 1  (count text)))))
 
 
-(defn unknown-cmd [text]
-  {:html (str "unknown command: " text)})
+
 

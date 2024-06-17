@@ -6,26 +6,28 @@
   ;(println "has-chat? " chats " chat-id: " chat-id)
   (some #(= chat-id %) chats))
 
-(defn subscriptions [state chat-id]
-  (let [subscriptions (:subscriptions @state)]
+(defn subscriptions [{:keys [state] :as this}]
+  (let [chat-id (:chat-id @state)
+        subscriptions (:subscriptions @state)]
     (->> (filter (fn [[topic chats]]
                    (has-chat? chats chat-id))
-                 subscriptions)    
+                 subscriptions)
          (map first))))
 
-(defn subscribe [state topic chat-id]
-  (let [subscriptions (:subscriptions @state)
+(defn subscribe [{:keys [state] :as this} topic]
+  (let [chat-id (:chat-id @state)
+        subscriptions (:subscriptions @state)
         chats (or (get subscriptions topic) [])
         chats (if (has-chat? chats chat-id)
-                  chats
-                  (conj chats chat-id))]
+                chats
+                (conj chats chat-id))]
     (swap! state update :subscriptions assoc topic chats)
     (println "topic " topic " subscribers: " chats " state: " @state)
-    {:html (str "added subscription topic: " topic)}
-    ))
+    {:html (str "added subscription topic: " topic)}))
 
-(defn unsubscribe [state topic chat-id]
-  (let [subscriptions (:subscriptions @state)
+(defn unsubscribe [{:keys [state] :as this} topic]
+  (let [chat-id (:chat-id @state)
+        subscriptions (:subscriptions @state)
         chat-ids (->> (or (get subscriptions topic) [])
                       (remove #(= chat-id %)))]
     (swap! state update :subscriptions assoc topic chat-ids)
@@ -38,33 +40,30 @@
     chat-ids))
 
 
-(defn publish [bot state topic msg]
+(defn publish [{:keys [bot state]} topic msg]
   (let [chats (topic-subscribers state topic)]
     ;(println "publishing topic: " topic " to: " chats)
     (println "publishing topic: " topic " to: " (count chats) " subscribers .. " " chat-ids: " chats)
     (doall (map #(send-message bot % msg) chats))))
-  
+
 
 ;; TOPIC: DEFAULT subscribe/unsubscribe
 
 (defn get-chat-id [msg]
   (get-in msg [:chat :id]))
 
-(defn subscribe-default [{:keys [bot state msg]}]
+(defn subscribe-default [this]
   (let [topic "default"
-        chat-id (get-chat-id msg)
-        msg (subscribe state topic chat-id)]
+        msg (subscribe this topic)]
     msg))
 
-(defn unsubscribe-default [{:keys [bot state msg]}]
+(defn unsubscribe-default [this]
   (let [topic "default"
-        chat-id (get-chat-id msg)
-        msg (unsubscribe state topic chat-id)]
+        msg (unsubscribe this topic)]
     msg))
 
-(defn my-subscriptions [{:keys [bot state msg]}]
+(defn my-subscriptions [this]
   (println "my-subs..")
-  (let [chat-id (get-chat-id msg)
-        topics (subscriptions state chat-id)
+  (let [topics (subscriptions this)
         msg {:html (str "Your subscriptions: " (pr-str topics))}]
     msg))

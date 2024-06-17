@@ -3,7 +3,14 @@
         org.pinkgorilla/telegram {:local/root ".." :deps/manifest :deps}
         org.pinkgorilla/modular {:mvn/version "0.0.39"}}
  :aliases
- {:demo {:exec-fn modular.system/start!
+ {:demo {:extra-deps {nrepl/nrepl {:mvn/version "0.9.0"}
+                      cider/cider-nrepl {:mvn/version "0.28.3"}}
+         :exec-fn modular.system/start!
          :exec-args {:profile "jetty"
                      :config ["config.edn"]
-                     :services "services.edn"}}}}
+                     :services "services.edn"}}
+  :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "0.9.0"}
+                       cider/cider-nrepl {:mvn/version "0.28.3"}
+                         ;cider/nrepl {:mvn/version "0.3.0"}
+                       }
+          :main-opts  ["-m" "nrepl.cmdline"]}}}
