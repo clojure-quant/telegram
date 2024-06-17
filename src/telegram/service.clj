@@ -28,11 +28,11 @@
           result
           [])))))
 
-(defn start-polling [b state {:keys [commands msg-fn] :as opts}]
+(defn start-polling [{:keys [bot state commands] :as this}]
   (println "starting polling.......")
-  (let [get-update (create-get-update b)
+  (let [get-update (create-get-update bot)
         process-msg (fn [data]
-                      (cmd/process-message b commands state data))]
+                      (cmd/process-message this data))]
     (future
       (loop []
         (let [messages (get-update)]
@@ -45,11 +45,12 @@
   (println "telegram bot name: " name " starting ..")
   (let [bot (tbot/create token)
         state (atom {:command nil
-                     :subscriptions {}})]
-    (start-polling bot state opts)
+                     :subscriptions {}})
+        this {:bot bot
+                 :state state
+                 :commands commands}]
+    (start-polling this)
     (cmd/set-commands bot commands)
-    {:bot bot 
-     :state state
-     :commands commands}))
+    this))
 
 

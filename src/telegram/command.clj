@@ -34,7 +34,7 @@
 
 
 
-(defn process-command [bot commands state {:keys [text chat] :as msg} c]
+(defn process-command [{:keys [bot state commands] :as this} {:keys [text chat] :as msg} c]
   (println "processing command: " c)
   (swap! state assoc :command c)
   (let [{:keys [command rpc-fn]
@@ -46,12 +46,12 @@
     (when-not ok
       (println "command [" command "] send error code: " error_code " description: " description " reply: \r\n" reply-msg))))
 
-(defn process-text [bot commands state data {:keys [text] :as message}]
+(defn process-text [{:keys [bot state commands] :as this} data {:keys [text] :as message}]
   (let [command (:command @state)]
   (println "message text rcvd: " text " command: " command)
   (println "message text data: " data " message: " message)))
 
-(defn process-message [bot commands state {:keys [message] :as data}]
+(defn process-message [this {:keys [message] :as data}]
     (if-let [c (msg-command? message)]
-      (process-command bot commands state message c)
-      (process-text bot commands state data message)))
+      (process-command this message c)
+      (process-text this data message)))
