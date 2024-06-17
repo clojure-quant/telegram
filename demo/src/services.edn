@@ -14,7 +14,7 @@
                                  {:command "table2" :description "table via html" :rpc-fn demo/table2}
                                  {:command "table3" :description "table big via html" :rpc-fn demo/table3}
                                  ;
-                                 {:command "time" :description "set time" :rpc-fn demo/time}
+                                 {:command "time" :description "set time" :rpc-fn demo/time :opts [{:title "timezone"}]}
                                  {:command "app" :description "web app" :rpc-fn demo/app}
                                  {:command "dialog1" :description "full keyboard" :rpc-fn demo/dialog1}
                                  ; publish & subscribe

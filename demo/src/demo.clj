@@ -41,8 +41,8 @@
                "</code>")})
 
 
-(defn time [_]
-  {:text (str "time 08:08:08")
+(defn time [_ timezone]
+  {:text (str "time 08:08:08 zone: " timezone)
    :keyboard  [[{:text "UTC" :callback_data "btn_utc"}
                 {:text "EST" :callback_data "btn_est"}]
                [{:text "winter" :callback_data "btn_winter"}

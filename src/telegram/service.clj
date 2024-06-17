@@ -1,7 +1,8 @@
 (ns telegram.service
   (:require
    [telegrambot-lib.core :as tbot]
-   [telegram.command :as cmd]))
+   [telegram.command :as cmd]
+   [telegram.options :as opts]))
 
 (defn next-update-id [result]
   ;(println "next-update-id for result: " result)
@@ -32,7 +33,7 @@
   (println "starting polling.......")
   (let [get-update (create-get-update bot)
         process-msg (fn [data]
-                      (cmd/process-message this data))]
+                      (opts/process-message this data))]
     (future
       (loop []
         (let [messages (get-update)]
