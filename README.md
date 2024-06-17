@@ -1,12 +1,26 @@
-# telegram-demo
+# telegram
+
+This library is very optinionated and allows to easily add a telegram bot to an application.
+It has two features
+- "Human RPC" interface: user can execute a command (with args parameter)
+- "Publish/Subscribe: user can subscribe to a topic and bot can publish topics
 
 
-# create a bot token
+# demo
 
-talk to: BotFather
-Bot usernames always end in 'bot' (e.g. @TriviaBot, @GitHub_bot).
+first you need to create a bot token: in telegram app talk to: BotFather and create a new telegram bot.
+then run:
 
-Use the /newbot command to create a new bot. The BotFather will ask you for a name and username, 
-then generate an authentication token for your new bot.
-The name of your bot is displayed in contact details and elsewhere.
+  cd demo
+  clj -X:demo
+
+
+You will see a list of commands in a chat with the bot, and can interact with it. Every 5 minutes a topic with random data is published which will be
+showing in the chat (after subscribing)
+
+
+
+
+
+
 

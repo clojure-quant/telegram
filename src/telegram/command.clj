@@ -1,7 +1,6 @@
 (ns telegram.command
   (:require
    [clojure.string :as str]
-   [cemerick.url :refer (url url-encode)]
    [telegrambot-lib.core :as tbot]))
 
 ; A command must always start with the '/' symbol and may not be longer than 32 characters. 

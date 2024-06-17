@@ -9,6 +9,6 @@
                      :config [{:telegram {:name "quantacljbot"
                                           :token "7229339582:AAHqFidgDMquovAOziRzQIWFQMT670m99-8"
                                           ; hook needs to be a https address.
-                                          :hook nil ; "http://nuc12.jaguar-altered.ts.net:8081/api/telegram"
+                                          ;:hook nil ; "http://nuc12.jaguar-altered.ts.net:8081/api/telegram"
                                           }}]
                      :services "services.edn"}}}}
