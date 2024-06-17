@@ -1,5 +1,4 @@
-{:modular (modular.system/modular-env)  ; {:profile "jetty"  :config ["demo.edn" "secrets.edn"]}
- ;:secrets #include "secrets.edn" ;; externalised and usually "mounted" as a docker/kubernetes secret
+{:modular (modular.system/modular-env)
  :components
  {:config {:start (modular.config/load-config! (:config #ref [:modular]))}
   ;:web {:start (telegram.webserver/run-webserver nil)}
@@ -14,7 +13,7 @@
                                  {:command "table2" :description "table via html" :rpc-fn demo/table2}
                                  {:command "table3" :description "table big via html" :rpc-fn demo/table3}
                                  ;
-                                 {:command "time" :description "set time" :rpc-fn demo/time :opts [{:title "timezone"}]}
+                                 {:command "time" :description "set time" :rpc-fn demo/time :opts [{:title "timezone" :options ["UTC" "EST" "Panama"]}]}
                                  {:command "app" :description "web app" :rpc-fn demo/app}
                                  {:command "dialog1" :description "full keyboard" :rpc-fn demo/dialog1}
                                  ; publish & subscribe

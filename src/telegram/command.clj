@@ -17,7 +17,7 @@
   (->> (filter (cmd= cmd) commands) first))
 
 (defn set-commands [b commands]
-  (let [commands (map #(dissoc % :rpc-fn :opts) commands)
+  (let [commands (map #(select-keys % [:command :description]) commands)
         {:keys [ok result error_code description] :as r} (tbot/set-my-commands b {:commands commands})]
     (if ok
       (println "set-commands success! ")
