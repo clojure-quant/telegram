@@ -2,12 +2,25 @@
   (:require
    [telegram.send :refer [send-message]]))
 
+(defn has-chat? [chats chat-id]
+  ;(println "has-chat? " chats " chat-id: " chat-id)
+  (some #(= chat-id %) chats))
+
+(defn subscriptions [state chat-id]
+  (let [subscriptions (:subscriptions @state)]
+    (->> (filter (fn [[topic chats]]
+                   (has-chat? chats chat-id))
+                 subscriptions)    
+         (map first))))
+
 (defn subscribe [state topic chat-id]
   (let [subscriptions (:subscriptions @state)
-        chat-ids (-> (or (get subscriptions topic) [])
-                     (conj chat-id))]
-    (swap! state update :subscriptions assoc topic chat-ids)
-    (println "topic " topic " subscribers: " chat-ids " state: " @state)
+        chats (or (get subscriptions topic) [])
+        chats (if (has-chat? chats chat-id)
+                  chats
+                  (conj chats chat-id))]
+    (swap! state update :subscriptions assoc topic chats)
+    (println "topic " topic " subscribers: " chats " state: " @state)
     {:html (str "added subscription topic: " topic)}
     ))
 
@@ -26,9 +39,10 @@
 
 
 (defn publish [bot state topic msg]
-  (let [chat-ids (topic-subscribers state topic)]
-    (println "publishing topic: " topic " to: " (count chat-ids) " subscribers .. " " chat-ids: " chat-ids)
-    (doall (map #(send-message bot % msg) chat-ids))))
+  (let [chats (topic-subscribers state topic)]
+    ;(println "publishing topic: " topic " to: " chats)
+    (println "publishing topic: " topic " to: " (count chats) " subscribers .. " " chat-ids: " chats)
+    (doall (map #(send-message bot % msg) chats))))
   
 
 ;; TOPIC: DEFAULT subscribe/unsubscribe
@@ -46,4 +60,11 @@
   (let [topic "default"
         chat-id (get-chat-id msg)
         msg (unsubscribe state topic chat-id)]
+    msg))
+
+(defn my-subscriptions [{:keys [bot state msg]}]
+  (println "my-subs..")
+  (let [chat-id (get-chat-id msg)
+        topics (subscriptions state chat-id)
+        msg {:html (str "Your subscriptions: " (pr-str topics))}]
     msg))

@@ -20,6 +20,8 @@
                                  ; publish & subscribe
                                  {:command "subscribe" :description "subscribe default" :rpc-fn telegram.pubsub/subscribe-default}
                                  {:command "unsubscribe" :description "unsubscribe default" :rpc-fn telegram.pubsub/unsubscribe-default}
+                                 {:command "subscriptions" :description "current subscriptions" :rpc-fn telegram.pubsub/my-subscriptions}
+                                 
                                  ]})}
   :demo {:start (demo/telegram-demo (clip/ref :telegram))}
   :data-publisher {:start (demo/start-data-pusher (clip/ref :telegram))}

@@ -102,6 +102,6 @@
           msg (random-data)]
       (println "publishing topic: default data: " msg)
       (publish bot state topic msg)
-      (Thread/sleep 15000)
+      (Thread/sleep (* 5 60 1000)) ; 5 min
       (recur))))
 
