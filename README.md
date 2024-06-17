@@ -10,8 +10,8 @@ It has two features
 
 First you need to create a bot token: in telegram app talk to: BotFather and create a new telegram bot.
 
-In demo/resources/config-demo.edn enter your telegram bot token and name.
-Then rename the file to demo/resources/config.edn
+In demo/src/config-template.edn enter your telegram bot token and name.
+Then rename the file to demo/src/config.edn (so remove -template)
 
 then run:
 

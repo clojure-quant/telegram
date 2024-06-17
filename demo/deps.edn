@@ -1,5 +1,4 @@
-{:paths ["src"
-         "resources"]
+{:paths ["src"]
  :deps {org.clojure/clojure    {:mvn/version "1.11.1"}
         org.pinkgorilla/telegram {:local/root ".." :deps/manifest :deps}
         org.pinkgorilla/modular {:mvn/version "0.0.39"}}
