@@ -1,4 +1,4 @@
-# telegram
+# telegram-service
 
 This library is very optinionated and allows to easily add a telegram bot to an application.
 It has two features
