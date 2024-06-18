@@ -6,8 +6,11 @@
   ;(println "has-chat? " chats " chat-id: " chat-id)
   (some #(= chat-id %) chats))
 
+(defn current-session-chat-id [{:keys [state] :as this2}]
+  (get-in @state [:current-session :chat-id]))
+
 (defn subscriptions [{:keys [state] :as this}]
-  (let [chat-id (:chat-id @state)
+  (let [chat-id (current-session-chat-id this)
         subscriptions (:subscriptions @state)]
     (->> (filter (fn [[topic chats]]
                    (has-chat? chats chat-id))
@@ -15,7 +18,7 @@
          (map first))))
 
 (defn subscribe [{:keys [state] :as this} topic]
-  (let [chat-id (:chat-id @state)
+  (let [chat-id (current-session-chat-id this)
         subscriptions (:subscriptions @state)
         chats (or (get subscriptions topic) [])
         chats (if (has-chat? chats chat-id)
@@ -26,7 +29,7 @@
     {:html (str "added subscription topic: " topic)}))
 
 (defn unsubscribe [{:keys [state] :as this} topic]
-  (let [chat-id (:chat-id @state)
+  (let [chat-id  (current-session-chat-id this)
         subscriptions (:subscriptions @state)
         chat-ids (->> (or (get subscriptions topic) [])
                       (remove #(= chat-id %)))]

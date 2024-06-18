@@ -13,10 +13,17 @@
 (defn wink [_]
   {:html (slurp "asset/demo.html")})
 
-(def data [{:age 15 :name "Willy"}
+;; TABLES
+
+(def data-small [{:age 15 :name "Willy"}
            {:age 18 :name "Anna"}
            {:age 88 :name "Abuela"}
            {:age 0 :name "TelegramBotLib"}])
+
+(def data-big [{:age 15 :name "Willy" :likes "Banana" :icon "😀"}
+            {:age 18 :name "Anna" :likes "Beach" :icon "😛"}
+            {:age 88 :name "Abuela" :likes "Brownies" :icon ""}
+            {:age 0 :name "TelegramBotLib" :likes "Bowling" :icon "X"}])
 
 
 (defn sanitize [s]
@@ -30,24 +37,23 @@
   (-> (with-out-str (print-table data))
       (sanitize)))
 
-(defn table1 [_]
-  {:md (table data)})
+(defn table-md-small [_]
+  {:md (str "```" (table data-small) "```")})
 
-(defn table2 [_]
+(defn table-md-big [_]
+  {:md (str "```" (table data-big) "```")})
+
+(defn table-html-small [_]
   {:html (str  "<code>"
-               (with-out-str (print-table data))
+               (with-out-str (print-table data-small))
                "</code>")})
 
-(def data3 [{:age 15 :name "Willy" :likes "Banana" :icon "😀"}
-            {:age 18 :name "Anna" :likes "Beach" :icon "😛"}
-            {:age 88 :name "Abuela" :likes "Brownies" :icon ""}
-            {:age 0 :name "TelegramBotLib" :likes "Bowling" :icon "X"}])
-
-(defn table3 [_]
+(defn table-html-big [_]
   {:html (str  "<code>"
-               (with-out-str (print-table data3))
+               (with-out-str (print-table data-big))
                "</code>")})
 
+; 
 
 (defn timezone [_ timezone]
   {:text (str "timezone is now set to: " timezone)})
@@ -92,6 +98,8 @@
 
 (defn moon [_]
   {:photo "https://www.virtualtelescope.eu/wordpress/wp-content/uploads/2014/03/moon_16mar2014_stretched.jpg"})
+
+
 
 ;; DEMO SERVICE
 

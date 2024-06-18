@@ -7,17 +7,19 @@
                      {:commands [; md/html/foto from file/url
                                  {:command "wink" :description "html format demo" :rpc-fn demo/wink}
                                  {:command "md1" :description "markdown1" :rpc-fn demo/md1}
+                                 ; image
                                  {:command "moon" :description "moon photo" :rpc-fn demo/moon}
                                  ; generated table
-                                 {:command "table1" :description "table via md BAD" :rpc-fn demo/table1}
-                                 {:command "table2" :description "table via html" :rpc-fn demo/table2}
-                                 {:command "table3" :description "table big via html" :rpc-fn demo/table3}
+                                 {:command "tablemds" :description "table md small" :rpc-fn demo/table-md-small}
+                                 {:command "tablemdb" :description "table md big" :rpc-fn demo/table-md-big}
+                                 {:command "tablehtmls" :description "table html small" :rpc-fn demo/table-html-small}
+                                 {:command "tablehtmlb" :description "table html big" :rpc-fn demo/table-html-big}
                                  ;
                                  {:command "timezone" :description "set time"
                                   :rpc-fn demo/timezone
                                   :opts [{:title "timezone" :options ["UTC" "EST" "Panama"]}]}
                                  {:command "app" :description "web app" :rpc-fn demo/app}
-
+                                 ; keyboard
                                  {:command "dialog1" :description "full keyboard" :rpc-fn demo/dialog1}
                                  {:command "dialog2" :description "inline keyboard" :rpc-fn demo/dialog2}
                                  ; publish & subscribe

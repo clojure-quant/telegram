@@ -46,7 +46,8 @@
   (println "telegram bot name: " name " starting ..")
   (let [bot (tbot/create token)
         state (atom {:command nil
-                     :subscriptions {}})
+                     :subscriptions {}
+                     :session {}})
         this {:bot bot
                  :state state
                  :commands commands}]

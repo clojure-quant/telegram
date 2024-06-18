@@ -21,7 +21,7 @@ then run:
 You will see a list of commands in a chat with the bot, and can interact with it. Every 5 minutes a topic with random data is published which will be
 showing in the chat (after subscribing)
 
-
+To set the icon of the bot talk to the BotFather and upload an image.
 
 
 
