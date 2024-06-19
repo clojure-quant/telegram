@@ -112,14 +112,14 @@
 
 ;; DATA PUBLISHER
 
-(defn random-data []
-  {:html (str "topic: default, random data: " (rand-int 100))})
+(defn random-reply-message [topic]
+  {:html (str "topic: [ " topic "] random data: " (rand-int 100))})
 
 (defn start-data-pusher [this]
   (future
     (loop []
       (let [topic "marketdata"
-            msg (random-data)]
+            msg (random-reply-message topic)]
         (println "publishing topic: marketdata data: " msg)
         (publish this topic msg)
         (Thread/sleep (* 5 60 1000)) ; 5 min

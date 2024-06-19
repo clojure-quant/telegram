@@ -4,14 +4,15 @@
    [telegram.command :as cmd]
    [telegram.session :as db]
    [telegram.dialog :as dialog]
-   [telegram.message :as msg]))
+   [telegram.message :as msg]
+   [telegram.pubsub :as pubsub]))
 
 (defn has-all-args? [opts args]
   (= (count opts) (count args)))
 
 (defn exec-command [this chat-id]
   (let [{:keys [rpc-fn args command] :as current-session} (db/get-command-state this chat-id)
-        this2 (assoc this :current-session current-session)]
+        this2 (pubsub/add-current-session this current-session)]
     (try
       (println "executing command: " command "with args: " args)
       (apply rpc-fn this2 args)

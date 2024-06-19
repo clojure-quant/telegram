@@ -4,7 +4,9 @@
   ;:web {:start (telegram.webserver/run-webserver nil)}
   :telegram {:start (telegram.service/telegram-bot-start
                      (:telegram (deref (clip/ref :config)))
-                     {:commands [; md/html/foto from file/url
+                     {:commands [; test for long command
+                                 ;{:command "winkasdfjlkasdflkja sdflkjasdf;lkajsdflkjasdf" :description "html format demo" :rpc-fn demo/wink}
+                                 ; md/html/foto from file/url
                                  {:command "wink" :description "html format demo" :rpc-fn demo/wink}
                                  {:command "md1" :description "markdown1" :rpc-fn demo/md1}
                                  ; image
