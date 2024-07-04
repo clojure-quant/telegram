@@ -1,5 +1,6 @@
 (ns telegram.command
   (:require
+   [taoensso.timbre :refer [info warn error]]
    [clojure.string :as str]
    [telegrambot-lib.core :as tbot]))
 
@@ -32,14 +33,14 @@
   (let [commands (map #(select-keys % [:command :description]) commands)
         {:keys [ok result error_code description] :as r} (tbot/set-my-commands b {:commands commands})]
     (if ok
-      (println "set-commands success! ")
-      (println "set-commands error: " error_code ": " description)))
-    (do (println "invalid command found. commands need to be alphanumeric with max size 32.")
+      (info "set-commands success! ")
+      (error "set-commands error: " error_code ": " description)))
+    (do (error "invalid command found. commands need to be alphanumeric with max size 32.")
         (throw (Exception. "invalid telegram command found. max size: 32")))))
 
 (defn msg-command? [{:keys [text entities] :as msg}]
   (let [entity-type (-> entities first :type)]
-    ;(println "is-command? text: " text " type:" entity-type)
+    ;(info "is-command? text: " text " type:" entity-type)
     (when (and (= "bot_command" entity-type)
                (str/starts-with? text "/"))
       (subs text 1  (count text)))))

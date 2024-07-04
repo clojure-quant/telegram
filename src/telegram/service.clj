@@ -1,5 +1,6 @@
 (ns telegram.service
   (:require
+   [taoensso.timbre :refer [info warn error]]
    [telegrambot-lib.core :as tbot]
    [telegram.command :as cmd]
    [telegram.options :as opts]))
@@ -13,7 +14,7 @@
   (let [id (atom nil)]
     (fn []
       ;; https://core.telegram.org/bots/api#getting-updates
-      (println "get-updates max-id: " @id)
+      (info "get-updates max-id: " @id)
       (let [r (if @id
                 (tbot/get-updates bot {:offset @id :timeout 5})
                 (tbot/get-updates bot {:timeout 5}))
@@ -22,15 +23,15 @@
         (when (and ok (not (empty? result)))
           (reset! id (next-update-id result)))
         #_(when ok
-            (println "get-update success max id: " @id "msg rcvd: " result))
+            (info "get-update success max id: " @id "msg rcvd: " result))
         (when-not ok
-          (println "get-update error code: " error_code " error desc: " description))
+          (error "get-update error code: " error_code " error desc: " description))
         (if ok
           result
           [])))))
 
 (defn start-polling [{:keys [bot state commands] :as this}]
-  (println "starting polling.......")
+  (info "starting polling.......")
   (let [get-update (create-get-update bot)
         process-msg (fn [data]
                       (opts/process-message this data))]
@@ -43,7 +44,7 @@
         (recur)))))
 
 (defn telegram-bot-start [{:keys [token name _hook]} {:keys [commands] :as opts}]
-  (println "telegram bot name: " name " starting ..")
+  (info "telegram bot-service name: " name " starting ..")
   (let [bot (tbot/create token)
         state (atom {:command nil
                      :subscriptions {}

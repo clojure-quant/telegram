@@ -1,5 +1,6 @@
 {:paths ["src"]
  :deps {org.clojure/clojure    {:mvn/version "1.11.1"}
+        org.pinkgorilla/timbre {:mvn/version "0.0.7"}
         telegrambot-lib/telegrambot-lib {:mvn/version "2.15.0"}}
 
  :aliases

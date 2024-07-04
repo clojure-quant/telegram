@@ -1,11 +1,12 @@
 (ns telegram.send
   (:require
+   [taoensso.timbre :refer [info warn error]]
    [telegrambot-lib.core :as tbot]))
 
 (defn send-message-raw [bot chat-id text opts]
   (let [{:keys [ok error_code description] :as reply} (tbot/send-message bot chat-id text opts)]
     (when-not ok
-      (println "send-msg error code: " error_code " description: " description " opts: \r\n" opts))
+      (info "send-msg error code: " error_code " description: " description " opts: \r\n" opts))
     reply))
 
 (defn send-message [bot chat-id {:keys [text html md keyboard web reply-keyboard photo]
@@ -30,8 +31,8 @@
                  opts)]
       (if photo
         (tbot/send-photo bot chat-id photo)
-        (do (println "sending msg opts: " opts)
+        (do (info "sending msg opts: " opts)
             (send-message-raw bot chat-id text opts))))
-    (println "will not send empty message.")))
+    (error "will not send empty message.")))
 
   

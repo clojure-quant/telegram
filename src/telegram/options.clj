@@ -1,5 +1,6 @@
 (ns telegram.options
   (:require
+   [taoensso.timbre :refer [info warn error]]
    [telegram.send :refer [send-message]]
    [telegram.command :as cmd]
    [telegram.session :as db]
@@ -14,26 +15,26 @@
   (let [{:keys [rpc-fn args command] :as current-session} (db/get-command-state this chat-id)
         this2 (pubsub/add-current-session this current-session)]
     (try
-      (println "executing command: " command "with args: " args)
+      (info "executing command: " command "with args: " args)
       (apply rpc-fn this2 args)
       (catch Exception ex
-        (println "command " command " exception: " ex)
+        (error "command " command " exception: " ex)
         {:html "an exception has occured in this command."}))))
 
 (defn read-current-arg [{:keys [bot state commands] :as this} data]
-  (println "++ reading arg ++")
+  (info "++ reading arg ++")
   (let [chat-id (msg/chat-id data)
         {:keys [command args opts]} (db/get-command-state this chat-id)
         idx (count args)
         option (get opts idx)
         {:keys [title]} option
         text (msg/msg-text data)]
-    (println "received arg: " command "#" title "  value: " text)
+    (info "received arg: " command "#" title "  value: " text)
     (db/add-arg this chat-id text)
-    (println "new args state: " (:args @state))))
+    (info "new args state: " (:args @state))))
 
 (defn create-dialog [title options]
-  (println "create-dialog title: " title " options: " options)
+  (info "create-dialog title: " title " options: " options)
   (if options
     {:text (str "please select: " title)
      :keyboard (dialog/keyboard-options options)}
@@ -44,7 +45,7 @@
         idx (count args)
         option (get opts idx)
         {:keys [title options]} option]
-    (println "get-next-arg cmd: " command " args: " args " current option: " option)
+    (info "get-next-arg cmd: " command " args: " args " current option: " option)
     (create-dialog title options)))
 
 
@@ -57,7 +58,7 @@
     (when c1  (db/set-command! this c1 data))
     (let [chat-id (msg/chat-id data)
           {:keys [command args opts]} (db/get-command-state this chat-id)]
-      (println "++ reply cmd: " command "args: " args "command: " command)
+      (info "++ reply cmd: " command "args: " args "command: " command)
       (if command
         (do (when (and (not c1) (not (has-all-args? opts args)))
               (read-current-arg this data))
@@ -68,7 +69,7 @@
         (unknown-reply this data)))))
 
 (defn process-message [{:keys [bot state commands] :as this} data]
-  (println "RCVD: " data)
+  (info "RCVD: " data)
   (let [chat-id (msg/chat-id data)]
     (->> (create-reply-message this data)
          (send-message bot chat-id))))

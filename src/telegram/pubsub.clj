@@ -1,9 +1,10 @@
 (ns telegram.pubsub
   (:require
+   [taoensso.timbre :refer [info warn error]]
    [telegram.send :refer [send-message]]))
 
 (defn has-chat? [chats chat-id]
-  ;(println "has-chat? " chats " chat-id: " chat-id)
+  ;(info "has-chat? " chats " chat-id: " chat-id)
   (some #(= chat-id %) chats))
 
 (defn add-current-session [{:keys [state] :as this} current-session]
@@ -32,7 +33,7 @@
                   chats
                   (conj chats chat-id))]
       (swap! state update :subscriptions assoc topic chats)
-      (println "topic " topic " subscribers: " chats " state: " @state)
+      (info "topic " topic " subscribers: " chats " state: " @state)
       {:html (str "added subscription topic: " topic)})
     (let [session (current-session this)]
       {:html (str "subscription topic: " topic 
@@ -45,7 +46,7 @@
         chat-ids (->> (or (get subscriptions topic) [])
                       (remove #(= chat-id %)))]
     (swap! state update :subscriptions assoc topic chat-ids)
-    (println "topic " topic " subscribers: " chat-ids " state: " @state)
+    (info "topic " topic " subscribers: " chat-ids " state: " @state)
     {:html (str "removed subscription topic: " topic)}))
 
 (defn topic-subscribers [{:keys [state]} topic]
@@ -55,12 +56,12 @@
 
 (defn publish [{:keys [bot] :as this} topic msg]
   (let [chats (topic-subscribers this topic)]
-    ;(println "publishing topic: " topic " to: " chats)
-    (println "publishing topic: " topic " to: " (count chats) " subscribers .. " " chat-ids: " chats)
+    ;(info "publishing topic: " topic " to: " chats)
+    (info "publishing topic: " topic " to: " (count chats) " subscribers .. " " chat-ids: " chats)
     (doall (map #(send-message bot % msg) chats))))
 
 (defn my-subscriptions [this]
-  (println "my-subs..")
+  (info "my-subs..")
   (let [topics (subscriptions this)
         msg {:html (str "Your subscriptions: " (pr-str topics))}]
     msg))
