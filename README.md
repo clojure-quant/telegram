@@ -1,4 +1,5 @@
-# telegram-service
+# telegram [![GitHub Actions status |clojure-quant/telegram](https://github.com/clojure-quant/telegram/workflows/CI/badge.svg)](https://github.com/clojure-quant/telegram/actions?workflow=CI)[![Clojars Project](https://img.shields.io/clojars/v/io.github.clojure-quant/telegram.svg)](https://clojars.org/io.github.clojure-quant/telegram)
+
 
 This library is very optinionated and allows to easily add a telegram bot to an application.
 It has two features
