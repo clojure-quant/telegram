@@ -1,3 +1,12 @@
 {:paths ["src"]
  :deps {org.clojure/clojure    {:mvn/version "1.11.1"}
-        telegrambot-lib/telegrambot-lib {:mvn/version "2.15.0"}}}
+        telegrambot-lib/telegrambot-lib {:mvn/version "2.15.0"}}
+
+ :aliases
+ {; github ci  
+  :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
+                 slipset/deps-deploy {:mvn/version "0.2.1"}
+                 babashka/fs {:mvn/version "0.0.5"}}
+          :ns-default build}
+ ;
+  }}

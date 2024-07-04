@@ -4,3 +4,4 @@ config.edn
 .webly
 .nrepl-port
 .calva
+.lsp
