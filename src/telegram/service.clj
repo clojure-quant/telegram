@@ -1,6 +1,6 @@
 (ns telegram.service
   (:require
-   [taoensso.timbre :refer [info warn error]]
+   [taoensso.timbre :refer [debug info warn error]]
    [telegrambot-lib.core :as tbot]
    [telegram.command :as cmd]
    [telegram.options :as opts]))
@@ -14,7 +14,7 @@
   (let [id (atom nil)]
     (fn []
       ;; https://core.telegram.org/bots/api#getting-updates
-      (info "get-updates max-id: " @id)
+      (debug "get-updates max-id: " @id)
       (let [r (if @id
                 (tbot/get-updates bot {:offset @id :timeout 5})
                 (tbot/get-updates bot {:timeout 5}))
