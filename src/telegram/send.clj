@@ -6,7 +6,7 @@
 (defn send-message-raw [bot chat-id text opts]
   (let [{:keys [ok error_code description] :as reply} (tbot/send-message bot chat-id text opts)]
     (when-not ok
-      (info "send-msg error code: " error_code " description: " description " opts: \r\n" opts))
+      (error "send-msg error code: " error_code " description: " description " opts: \r\n" opts))
     reply))
 
 (defn send-message [bot chat-id {:keys [text html md keyboard web reply-keyboard photo]
