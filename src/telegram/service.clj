@@ -43,15 +43,16 @@
         (Thread/sleep 500)
         (recur)))))
 
-(defn telegram-bot-start [{:keys [token name _hook]} {:keys [commands] :as opts}]
+(defn telegram-bot-start [{:keys [token name _hook]} {:keys [commands db] :as opts}]
   (info "telegram bot-service name: " name " starting ..")
   (let [bot (tbot/create token)
         state (atom {:command nil
                      :subscriptions {}
                      :session {}})
         this {:bot bot
-                 :state state
-                 :commands commands}]
+              :state state
+              :commands commands
+              :db db}]
     (start-polling this)
     (cmd/set-commands bot commands)
     this))

@@ -3,7 +3,8 @@
    [clojure.string :as str]
    [clojure.pprint :refer [print-table]]
    [telegrambot-lib.core :as tbot]
-   [telegram.pubsub :refer [publish]]))
+   [telegram.pubsub :refer [publish current-session-chat-id]]
+   [telegram.user :as user]))
 
 ;; RPC COMMANDS
 
@@ -98,6 +99,26 @@
 
 (defn moon [_]
   {:photo "https://www.virtualtelescope.eu/wordpress/wp-content/uploads/2014/03/moon_16mar2014_stretched.jpg"})
+
+(defn connect [{:keys [db] :as this} token]
+  (let [token (str/trim token)
+        uid (current-session-chat-id this)
+        u (user/connect db uid token)]
+    (if u
+      {:text (:user/name u)}
+      {:text (str "invalid token: " token)})))
+
+(defn disconnect [{:keys [db] :as this}]
+  (let [uid (current-session-chat-id this)]
+    (user/disconnect db uid)
+    {:text "disconnected"}))
+
+(defn userinfo [{:keys [db] :as this}]
+  (let [uid (current-session-chat-id this)
+        u (user/get-user db uid)]
+    (if u
+      {:text (:user/name u)}
+      {:text "NOT LOGGED IN"})))
 
 
 

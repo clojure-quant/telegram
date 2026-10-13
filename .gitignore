@@ -5,3 +5,4 @@ config.edn
 .nrepl-port
 .calva
 .lsp
+telegram-db

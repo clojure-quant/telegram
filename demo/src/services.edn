@@ -1,10 +1,19 @@
 {:modular (modular.system/modular-env)
  :components
- {:config {:start (modular.config/load-config! (:config #ref [:modular]))}
+ {:config {:start (deref (modular.config/load-config! (:config #ref [:modular])))}
   ;:web {:start (telegram.webserver/run-webserver nil)}
+  :db {:start (quanta.util.datahike/db-start
+               {:schema (concat (deref modular.permission.user.datahike/schema)
+                                (deref telegram.user/schema))
+                :db-path (get-in (clip/ref :config) [:db :dir])
+                :uuid (get-in (clip/ref :config) [:db :uuid])
+                :seed-fn [(demo.user/seed-edn-users
+                           (get-in (clip/ref :config) [:db-seed :users-file]))]})
+       :stop (quanta.util.datahike/db-stop this)}
   :telegram {:start (telegram.service/telegram-bot-start
-                     (:telegram (deref (clip/ref :config)))
-                     {:commands [; test for long command
+                     (:telegram (clip/ref :config))
+                     {:db (clip/ref :db)
+                      :commands [; test for long command
                                  ;{:command "winkasdfjlkasdflkja sdflkjasdf;lkajsdflkjasdf" :description "html format demo" :rpc-fn demo/wink}
                                  ; md/html/foto from file/url
                                  {:command "wink" :description "html format demo" :rpc-fn demo/wink}
@@ -24,6 +33,14 @@
                                  ; keyboard
                                  {:command "dialog1" :description "full keyboard" :rpc-fn demo/dialog1}
                                  {:command "dialog2" :description "inline keyboard" :rpc-fn demo/dialog2}
+                                 ; user
+                                 {:command "connect" :description "connect with token"
+                                  :rpc-fn demo/connect
+                                  :opts [{:title "token"}]}
+                                 {:command "disconnect" :description "disconnect telegram user"
+                                  :rpc-fn demo/disconnect}
+                                 {:command "userinfo" :description "current user"
+                                  :rpc-fn demo/userinfo}
                                  ; publish & subscribe
                                  {:command "subscribe" :description "subscribe topic"
                                   :rpc-fn telegram.pubsub/subscribe

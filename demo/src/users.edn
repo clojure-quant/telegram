@@ -1,0 +1,6 @@
+{:users
+ [{:user/name "florian"
+   :user/password "123456"
+   :user/roles #{:admin}
+   :user/email ["florian@example.com"]
+   :user/telegram-token "3281882626629371"}]}

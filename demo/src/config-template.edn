@@ -1,6 +1,7 @@
 {:telegram {:name "your-telegram-bot"
             :token "talk-to-godfather-in-telegram-to-get-the-token"}
- 
- 
 
- }
+ :db {:dir "telegram-db"
+      :uuid #uuid "a0239cb5-978d-4b18-b037-cde4d49220dd"}
+
+ :db-seed {:users-file "users.edn"}}
